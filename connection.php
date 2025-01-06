@@ -2,7 +2,7 @@
 function get_connection() {
     $servername = "localhost";
     $username = "root";
-    $password = "1234";
+    $password = "";
     $database = "clothes_db";
 
     $mysqli = new mysqli($servername, $username, $password, $database);

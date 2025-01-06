@@ -6,7 +6,7 @@ class Clothe {
     public static function get_all() {
         $mysqli = get_connection();
 
-        $data_sql = $mysqli->query("SELECT * FROM clothes INNER JOIN type ON clothes.clotheType = type.id");
+        $data_sql = $mysqli->query("SELECT * FROM clothes INNER JOIN type ON clothes.type = type.id");
         $data = [];
 
         if ($data_sql) {
@@ -27,15 +27,41 @@ class Clothe {
 
     public static function create_resource($name, $color, $type) {
         $mysqli = get_connection();
-
-        $query = $mysqli->prepare("INSERT INTO clothes (name, color, usedTimes, clotheType) VALUES (?, ?, ?, ?)");
-        $query->bind_param("ssis", $name, $color, $usedTimes = 0, $type);
-
-        $result = $query->execute();
-        $query->close();
+    
+        $name = $mysqli->real_escape_string($name); 
+        $color = $mysqli->real_escape_string($color); 
+        $type = (int)$type;  
+    
+        $query = "INSERT INTO clothes (name, color, usedTimes, type) VALUES ('$name', '$color', 0, $type)";
+    
+        $result = $mysqli->query($query);
+    
+        if ($result === false) {
+            die('Error en la ejecución de la consulta: ' . $mysqli->error); 
+        }
+    
         $mysqli->close();
-
+    
         return $result;
     }
+
+    public static function setUsed($id) {
+        $mysqli = get_connection();
+    
+        $query = "UPDATE clothes SET usedTimes = usedTime + 1 WHERE id = $id)";
+    
+        $result = $mysqli->query($query);
+    
+        if ($result === false) {
+            die('Error en la ejecución de la consulta: ' . $mysqli->error); 
+        }
+    
+        $mysqli->close();
+    
+        return $result;
+    }
+    
+    
+    
 }
 ?>
