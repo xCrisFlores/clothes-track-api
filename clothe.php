@@ -6,7 +6,7 @@ class Clothe {
     public static function get_all() {
         $mysqli = get_connection();
 
-        $data_sql = $mysqli->query("SELECT * FROM clothes INNER JOIN type ON clothes.type = type.id");
+        $data_sql = $mysqli->query("SELECT clothes.id ,name,color, usedTimes, type.type FROM clothes INNER JOIN type ON clothes.type = type.id");
         $data = [];
 
         if ($data_sql) {
@@ -48,7 +48,7 @@ class Clothe {
     public static function setUsed($id) {
         $mysqli = get_connection();
     
-        $query = "UPDATE clothes SET usedTimes = usedTime + 1 WHERE id = $id)";
+        $query = "UPDATE clothes SET usedTimes = usedTimes + 1 WHERE id = $id";
     
         $result = $mysqli->query($query);
     
@@ -60,8 +60,21 @@ class Clothe {
     
         return $result;
     }
+
+    public static function deleteClothe($id) {
+        $mysqli = get_connection();
     
+        $query = "DELETE FROM clothes WHERE id = $id";
     
+        $result = $mysqli->query($query);
     
+        if ($result === false) {
+            die('Error en la ejecución de la consulta: ' . $mysqli->error); 
+        }
+    
+        $mysqli->close();
+    
+        return $result;
+    }
 }
 ?>
